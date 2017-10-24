@@ -104,6 +104,7 @@ namespace HttpChatServer
         private void SendData(HttpListenerContext context, string data)
         {
             context.Response.ContentType = "text/plain";
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
             context.Response.ContentLength64 = data.Length;
             context.Response.OutputStream.Write(Encoding.ASCII.GetBytes(data), 0, data.Length);
             context.Response.OutputStream.Close();

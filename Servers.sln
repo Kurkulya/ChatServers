@@ -11,6 +11,50 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketChatServer", "WebS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketChatClientD", "WebSocketChatClientD\WebSocketChatClientD.csproj", "{88896713-9DBB-4539-AE78-4CD0611377BD}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSocketClientW", "WebSocketClientW\", "{4390D7EB-E3DD-4EF6-AAC7-C72DC0A76131}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_61358"
+		Debug.AspNetCompiler.PhysicalPath = "WebSocketClientW\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61358\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_61358"
+		Release.AspNetCompiler.PhysicalPath = "WebSocketClientW\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61358\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61358"
+		SlnRelativePath = "WebSocketClientW\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "HttpChatClientW", "HttpChatClientW\", "{3EA5DBE3-79DD-4DB0-A772-30C6E9343C0D}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_62297"
+		Debug.AspNetCompiler.PhysicalPath = "HttpChatClientW\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62297\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_62297"
+		Release.AspNetCompiler.PhysicalPath = "HttpChatClientW\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62297\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "62297"
+		SlnRelativePath = "HttpChatClientW\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +77,14 @@ Global
 		{88896713-9DBB-4539-AE78-4CD0611377BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88896713-9DBB-4539-AE78-4CD0611377BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88896713-9DBB-4539-AE78-4CD0611377BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4390D7EB-E3DD-4EF6-AAC7-C72DC0A76131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4390D7EB-E3DD-4EF6-AAC7-C72DC0A76131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4390D7EB-E3DD-4EF6-AAC7-C72DC0A76131}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{4390D7EB-E3DD-4EF6-AAC7-C72DC0A76131}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3EA5DBE3-79DD-4DB0-A772-30C6E9343C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EA5DBE3-79DD-4DB0-A772-30C6E9343C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EA5DBE3-79DD-4DB0-A772-30C6E9343C0D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EA5DBE3-79DD-4DB0-A772-30C6E9343C0D}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

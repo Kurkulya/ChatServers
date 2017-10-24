@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+
+<textarea id="chat" rows="10" cols="30"></textarea><br>
+Your message: <br><input type="text" id="input" value=""><p>
+<input type="button" onclick="send()" value="Send">
+<p>
+
+
+<script>
+
+    var websocket = new WebSocket("ws://localhost:8888/");
+    var chatArea = document.getElementById("chat");
+    var input = document.getElementById("input");
+
+    websocket.onmessage = function (evt) {
+        chat.value += "\nServer: " + evt.data;
+    };
+
+    websocket.onopen = function () {
+        chat.value += "\nYou've connected to server";
+    };
+
+    function send() {
+        websocket.send(input.value);
+        chat.value += "\nYou: " + input.value;
+    };
+
+    
+
+    //websocket.onclose = function () {
+    //    chat.value += "\nConnection was closed";;
+    //};
+
+</script>
