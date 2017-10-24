@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpChatServer", "HttpChatS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpChatClientD", "HttpChatClientD\HttpChatClientD.csproj", "{88F43902-4B16-49FB-B010-83CDF29CF51D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketChatServer", "WebSocketChatServer\WebSocketChatServer.csproj", "{33ACC7A7-6D5B-4E80-A0F9-E41AC52BC75B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketChatClientD", "WebSocketChatClientD\WebSocketChatClientD.csproj", "{88896713-9DBB-4539-AE78-4CD0611377BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{88F43902-4B16-49FB-B010-83CDF29CF51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88F43902-4B16-49FB-B010-83CDF29CF51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88F43902-4B16-49FB-B010-83CDF29CF51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33ACC7A7-6D5B-4E80-A0F9-E41AC52BC75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33ACC7A7-6D5B-4E80-A0F9-E41AC52BC75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33ACC7A7-6D5B-4E80-A0F9-E41AC52BC75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33ACC7A7-6D5B-4E80-A0F9-E41AC52BC75B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88896713-9DBB-4539-AE78-4CD0611377BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88896713-9DBB-4539-AE78-4CD0611377BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88896713-9DBB-4539-AE78-4CD0611377BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88896713-9DBB-4539-AE78-4CD0611377BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

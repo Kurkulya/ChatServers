@@ -81,6 +81,7 @@ namespace HttpChatClientD
         {
             if (thread.IsAlive == false)
                 thread.Start();
+            chatList.Items.Add("You've connected to server!");
         }
     }
 }
