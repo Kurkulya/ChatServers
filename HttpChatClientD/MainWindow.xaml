@@ -1,0 +1,17 @@
+﻿<Window x:Class="HttpChatClientD.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HttpChatClientD"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <ListBox x:Name="chatList" HorizontalAlignment="Left" Height="258" Margin="10,10,0,0" VerticalAlignment="Top" Width="497"/>
+        <Button x:Name="sendBtn" Content="Send" HorizontalAlignment="Left" Margin="186,279,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="SendClick"/>
+        <TextBox x:Name="inputTB" HorizontalAlignment="Left" Height="23" Margin="10,279,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171"/>
+        <TextBox x:Name="ipTB" HorizontalAlignment="Left" Height="23" Margin="298,279,0,0" TextWrapping="Wrap" Text="localhost:8888" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="ConnectBtn" Content="Connect" HorizontalAlignment="Left" Margin="423,279,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="ConnectClick"/>
+
+    </Grid>
+</Window>

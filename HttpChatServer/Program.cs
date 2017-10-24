@@ -10,6 +10,8 @@ namespace HttpChatServer
     {
         static void Main(string[] args)
         {
+            HttpServer server = new HttpServer("http://localhost:8888/");
+            server.Start();
         }
     }
 }
