@@ -15,7 +15,6 @@ namespace HttpChatClientA.Droid
 	public class MainActivity : Activity
 	{
         HttpClient client;
-        string userName = "noname";
         Thread thread;
 
         Button btnSend;
@@ -72,12 +71,10 @@ namespace HttpChatClientA.Droid
             {
                 try
                 {
-                    string response = await client.GetStringAsync(inputIp.Text + "?check=" + userName);
+                    string response = await client.GetStringAsync(inputIp.Text + "?check=true");
                     string[] param = response.Split('=');
                     if (param[0] == "message")
                         RunOnUiThread(() => listChat.Text += "\nServer: " + param[1]);
-                    else if (param[0] == "name")
-                        userName = param[1];
                 }
                 catch (Exception e)
                 {

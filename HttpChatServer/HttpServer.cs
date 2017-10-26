@@ -13,12 +13,11 @@ namespace HttpChatServer
     {
         HttpListener listener;
         string lastMessage = "";
-        Dictionary <string, bool> clients;
-        int count = 0;
+        Dictionary <Cookie, bool> clients;
 
         public HttpServer(string uri)
         {
-            clients = new Dictionary<string, bool>();
+            clients = new Dictionary<Cookie, bool>();
             listener = new HttpListener();
             listener.Prefixes.Add(uri);
         }
@@ -45,53 +44,32 @@ namespace HttpChatServer
 
         private void Receiver(HttpListenerContext context)
         {
-            string message = "";
-            string check = "";
-
-            if (context.Request.HttpMethod == "POST")
+            Dictionary<string, string> param = ParseRequest(context.Request);
+            if (param.ContainsKey("message"))
             {
-                var body = new StreamReader(context.Request.InputStream).ReadToEnd();
-                string[] param = body.Split('=');
-                if (param[0] == "message")
-                    message = param[1];
-                else if (param[0] == "check")
-                    check = param[1];              
-            }
-            else
-            {
-                string[] param = context.Request.QueryString.AllKeys;
-                if (param.Contains("message"))
-                    message = context.Request.QueryString["message"];
-                else if (param.Contains("check"))
-                    check = context.Request.QueryString["check"];
-            }
-
-            if (message != "")
-            {
-                lastMessage = message;
+                lastMessage = param["message"];
                 for(int i = 0; i< clients.Count; i++)
                 {
                     clients[clients.Keys.ElementAt(i)] = true;
                 }
                 SendData(context, "received");
             }
-            else if(check != "")
+            else if(param.ContainsKey("check"))
             {
-                if (check == "noname")
+                Cookie cookie = context.Request.Cookies["ID"];
+                if (cookie == null)
                 {
-                    string userName = "user" + count++;
-                    clients.Add(userName, false);
-                    SendData(context, "name=" + userName);                  
+                    Cookie newCookie = new Cookie("ID", DateTime.Now.ToString());
+                    context.Response.AppendCookie(newCookie);
+                    clients.Add(newCookie, false);
+                    SendData(context, "nomessage=true");                  
                 }
                 else
                 {
-                    if (clients.ContainsKey(check) == false)
-                        clients.Add(check, false);
-
-                    if (clients[check] == true)
+                    if (clients[cookie] == true)
                     {
                         SendData(context, "message=" + lastMessage);
-                        clients[check] = false;
+                        clients[cookie] = false;
                     }
                     else
                     {
@@ -105,9 +83,36 @@ namespace HttpChatServer
         {
             context.Response.ContentType = "text/plain";
             context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            context.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+            context.Response.AddHeader("Access-Control-Expose-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization"); 
             context.Response.ContentLength64 = data.Length;
             context.Response.OutputStream.Write(Encoding.ASCII.GetBytes(data), 0, data.Length);
             context.Response.OutputStream.Close();
+        }
+
+        private Dictionary<string,string> ParseRequest(HttpListenerRequest request)
+        {
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            if (request.HttpMethod == "POST")
+            {
+                string body = new StreamReader(request.InputStream).ReadToEnd();
+                string[] temp = body.Split('=', '&');
+                for (int i = 0; i < temp.Length; i+=2)
+                {
+                    param.Add(temp[i], temp[i + 1]);
+                }              
+            }
+            else
+            {
+                string[] temp = request.QueryString.AllKeys;
+                foreach(string key in temp)
+                {
+                    param.Add(key, request.QueryString[key]);
+                }
+            }
+
+            return param;
         }
     }
 }

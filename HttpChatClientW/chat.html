@@ -3,6 +3,7 @@
 <textarea id="chat" rows="10" cols="30"></textarea><br>
 Your message: <br><input type="text" id="input" value=""><p>
 <input type="button" onclick="send()" value="Send">
+<input type="button" onclick="connect()" value="Connect">
 <p>
 
 
@@ -12,10 +13,12 @@ Your message: <br><input type="text" id="input" value=""><p>
     var input = document.getElementById("input");
 
     var ip = "http://localhost:8888/"
-    var user = "noname";
 
-    setInterval(receiver, 500);
-    chat.value += "\nYou've connected to server!";
+    function connect() {
+        setInterval(receiver, 500);
+        chat.value += "\nYou've connected to server!";
+    }
+   
 
     function send() {
         try {
@@ -35,11 +38,8 @@ Your message: <br><input type="text" id="input" value=""><p>
 
     function receiver() {
         try {
-            var req = "check=" + user;
-
             var rr = new XMLHttpRequest();
-
-            rr.open('GET', ip + '?' + req, false);
+            rr.open('GET', ip + '?check=true', false);
             rr.send(null);
             var response = rr.responseText;
 
@@ -47,8 +47,6 @@ Your message: <br><input type="text" id="input" value=""><p>
 
             if (param[0] == "message")
                 chat.value += "\nServer: " + param[1];
-            else if (param[0] == "name")
-                user = param[1];
         }
         catch (e){
             chat.value += "\nCannot connect to server!";

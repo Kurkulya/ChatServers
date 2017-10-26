@@ -25,19 +25,15 @@ namespace HttpChatClientD
     public partial class MainWindow : Window
     {
         HttpClient client;
-        string userName = "noname";
-        string ip;
         Thread thread;
+        string ip;
 
         public MainWindow()
         {
-            ip = @"http://localhost:8888/";
             client = new HttpClient();
             thread = new Thread(StartListen);
             InitializeComponent();                      
         }
-
-
 
         private async void StartListen()
         {
@@ -45,12 +41,10 @@ namespace HttpChatClientD
             {
                 try
                 {
-                    string response = await client.GetStringAsync(ip+"?check=" + userName);
+                    string response = await client.GetStringAsync(ip + "?check=true");
                     string[] param = response.Split('=');
                     if (param[0] == "message")
                         Dispatcher.Invoke(() => chatList.Items.Add("Server: " + param[1]));                     
-                    else if (param[0] == "name")
-                        userName = param[1];
                 }
                 catch(Exception e)
                 {
@@ -62,7 +56,6 @@ namespace HttpChatClientD
 
         private async void SendClick(object sender, RoutedEventArgs e)
         {
-            //thread.Interrupt();
             try
             {
                 var response = await client.PostAsync(ip, new StringContent("message=" + inputTB.Text));
@@ -74,11 +67,11 @@ namespace HttpChatClientD
             {
                 chatList.Items.Add("Cannot connect!");
             }
-            //thread.Resume();
         }
 
         private void ConnectClick(object sender, RoutedEventArgs e)
         {
+            ip = "http://" + ipTB.Text;
             if (thread.IsAlive == false)
                 thread.Start();
             chatList.Items.Add("You've connected to server!");
