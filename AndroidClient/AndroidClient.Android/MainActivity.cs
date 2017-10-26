@@ -100,7 +100,7 @@ namespace AndroidClient.Droid
             {
                 RunOnUiThread(() =>
                 {
-                    listChat.Text += "Connection lost!";
+                    listChat.Text += "\nConnection lost!";
                 });
                 
             }
