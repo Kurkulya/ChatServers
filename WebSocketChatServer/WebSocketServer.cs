@@ -1,4 +1,4 @@
-﻿using System.Net.WebSockets;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,66 +6,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Threading;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace WebSocketChatServer
 {
-    class WebSocketServer
+    class ChatServer : WebSocketBehavior
     {
-        List<WebSocket> clients;
-        HttpListener httpListener;
-
-        public WebSocketServer(string httpListenerPrefix)
+        protected override void OnOpen()
         {
-            httpListener = new HttpListener();
-            httpListener.Prefixes.Add(httpListenerPrefix);
-            clients = new List<WebSocket>();
-        }
-
-        public async void Start()
-        {
-            httpListener.Start();
             Console.WriteLine("Listening...");
-
-            while (true)
-            {
-                HttpListenerContext httpListenerContext = await httpListener.GetContextAsync();
-
-                if (httpListenerContext.Request.IsWebSocketRequest)
-                    ProcessRequest(httpListenerContext);
-                else
-                    httpListenerContext.Response.Close();
-            }
         }
 
-
-        private async void ProcessRequest(HttpListenerContext context)
+        protected override void OnMessage(MessageEventArgs e)
         {
-            WebSocketContext webSocketContext = await context.AcceptWebSocketAsync(subProtocol: null);
-            WebSocket webSocket = webSocketContext.WebSocket;
+            Sessions.Broadcast(e.Data);
+        }
 
-            if (clients.Contains(webSocket) == false)
-                clients.Add(webSocket);
-          
-            try
-            {
-                while (webSocket.State == WebSocketState.Open)
-                {
-                    byte[] buffer = new byte[1024];
-                    WebSocketReceiveResult receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer),
-                        CancellationToken.None);
+        protected override void OnClose(CloseEventArgs e)
+        {
+            base.OnClose(e);
+        }
 
-                    foreach (WebSocket socket in clients)
-                    {
-                        await socket.SendAsync(new ArraySegment<byte>(buffer, 0, receiveResult.Count), 
-                            WebSocketMessageType.Text, receiveResult.EndOfMessage, CancellationToken.None);
-                    }
-                }
-            }
-            catch
-            {
-                webSocket.Dispose();
-                clients.Remove(webSocket);
-            }
+        protected override void OnError(ErrorEventArgs e)
+        {
+            base.OnError(e);
         }
     }
 }

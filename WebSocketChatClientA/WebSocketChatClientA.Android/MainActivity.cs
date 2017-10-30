@@ -6,17 +6,17 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Net.Http;
 using System.Text;
+using WebSocket.Portable;
 
 namespace WebSocketChatClientA.Droid
 {
 	[Activity (Label = "WebSocketChatClientA.Android", MainLauncher = true, Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-        ClientWebSocket client = null;
+        WebSocketClient client = new WebSocketClient();
 
         Button btnSend;
         Button btnConnect;
@@ -36,6 +36,8 @@ namespace WebSocketChatClientA.Droid
             inputText = FindViewById<EditText>(Resource.Id.inputText);
             inputIp = FindViewById<EditText>(Resource.Id.ipInput);
 
+            client.FrameReceived += data => RunOnUiThread(() => listChat.Text += data);
+
             btnSend.Click += SendText;
             btnConnect.Click += ConnectToServer;
         }
@@ -44,15 +46,9 @@ namespace WebSocketChatClientA.Droid
         {
             try
             {
-                if (client == null)
-                {
-                    client = new ClientWebSocket();
-                    await client.ConnectAsync(new Uri("ws://" + inputIp.Text), CancellationToken.None);
-                    listChat.Text += "\nYou've connected to the server!";
-                    Receiver();
-                }
+                await client.OpenAsync("ws://localhost:8888/ChatServer");
             }
-            catch (Exception ex)
+            catch 
             {
                 listChat.Text += "\nCannot connect to server!";
             }
@@ -62,23 +58,12 @@ namespace WebSocketChatClientA.Droid
         {
             try
             {
-                byte[] buffer = Encoding.UTF8.GetBytes(inputText.Text);
-                await client.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, false, CancellationToken.None);
+                await client.SendAsync(inputText.Text);
                 listChat.Text += "\nYou: " + inputText.Text;
             }
             catch
             {
                 listChat.Text += "\nCannot connect to server!";
-            }
-        }
-
-        private async void Receiver()
-        {
-            while (client.State == WebSocketState.Open)
-            {
-                byte[] buffer = new byte[1024];
-                var result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                listChat.Text += "\nServer: " + Encoding.UTF8.GetString(buffer).TrimEnd('\0');
             }
         }
     }

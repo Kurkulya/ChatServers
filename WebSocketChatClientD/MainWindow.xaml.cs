@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,24 +14,35 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WebSocketSharp;
 
 namespace WebSocketChatClientD
 {
     public partial class MainWindow : Window
     {
-        ClientWebSocket client = null;
+        private WebSocket client;
+        const string host = "ws://localhost:8888/ChatServer";
+
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private async void SendClick(object sender, RoutedEventArgs e)
+            client = new WebSocket(host);
+
+            client.OnOpen += (s, e) => Dispatcher.Invoke(() => chatList.Items.Add("You've connected to " + host));
+            client.OnError += (s, e) => Dispatcher.Invoke(() => chatList.Items.Add("Error: " +e.Message));
+            client.OnMessage += (s, e) => Dispatcher.Invoke(() => chatList.Items.Add("Server: " +e.Data));
+            client.OnClose += (s, e) => Dispatcher.Invoke(() => chatList.Items.Add("You've disconnected from " + host));
+        }
+   
+       
+        private void SendClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                byte[] buffer = Encoding.UTF8.GetBytes(inputTB.Text);
-                await client.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, false, CancellationToken.None);
-                chatList.Items.Add("You: " + inputTB.Text);
+                var content = inputTB.Text;
+                if (!string.IsNullOrEmpty(content))
+                    client.Send(content);
             }
             catch
             {
@@ -40,31 +50,15 @@ namespace WebSocketChatClientD
             }
         }
 
-        private async void ConnectClick(object sender, RoutedEventArgs e)
+        private void ConnectClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (client == null)
-                {
-                    client = new ClientWebSocket();
-                    await client.ConnectAsync(new Uri("ws://" + ipTB.Text), CancellationToken.None);
-                    chatList.Items.Add("You've connected to the server!");
-                    Receiver();
-                }
+                client.Connect();
             }
-            catch (Exception ex)
+            catch 
             {
                 chatList.Items.Add("Cannot connect to server!");
-            }
-        }
-
-        private async void Receiver()
-        {           
-            while (client.State == WebSocketState.Open)
-            {
-                byte[] buffer = new byte[1024];
-                var result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                chatList.Items.Add("Server: " + Encoding.UTF8.GetString(buffer).TrimEnd('\0'));
             }
         }
     }

@@ -8,7 +8,7 @@ Your message: <br><input type="text" id="input" value=""><p>
 
 <script>
 
-    var websocket = new WebSocket("ws://localhost:8888/");
+    var websocket = new WebSocket("ws://localhost:8888/ChatServer");
     var chatArea = document.getElementById("chat");
     var input = document.getElementById("input");
 
@@ -24,11 +24,9 @@ Your message: <br><input type="text" id="input" value=""><p>
         websocket.send(input.value);
         chat.value += "\nYou: " + input.value;
     };
-
-    
-
-    //websocket.onclose = function () {
-    //    chat.value += "\nConnection was closed";;
-    //};
+   
+    websocket.onclose = function () {
+        chat.value += "\nConnection was closed";;
+    };
 
 </script>
