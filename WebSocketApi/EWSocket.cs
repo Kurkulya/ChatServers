@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebSocketServerEvents
+namespace WebSocketApi
 {
-    class EWebSocket
+    public class EWebSocket
     {
         List<WebSocket> clients;
         HttpListener httpListener;
@@ -26,6 +26,8 @@ namespace WebSocketServerEvents
             wsEngine = new WSEngine();
         }
  
+
+
         public async void Start()
         {
             httpListener.Start();           

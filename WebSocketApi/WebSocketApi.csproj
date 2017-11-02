@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29936141-BB7C-4AE2-9CD7-8F3AD570CA94}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>WebSocketServerEvents</RootNamespace>
-    <AssemblyName>WebSocketServerEvents</AssemblyName>
+    <ProjectGuid>{E666FEF8-3ABB-4839-9932-08EAD867ACD7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebSocketApi</RootNamespace>
+    <AssemblyName>WebSocketApi</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,18 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Action.cs" />
+    <Compile Include="EWSocket.cs" />
+    <Compile Include="IActionCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WSServer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WebSocketApi\WebSocketApi.csproj">
-      <Project>{e666fef8-3abb-4839-9932-08ead867acd7}</Project>
-      <Name>WebSocketApi</Name>
-    </ProjectReference>
+    <Compile Include="WSEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
