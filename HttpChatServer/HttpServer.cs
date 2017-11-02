@@ -13,46 +13,57 @@ namespace HttpChatServer
     {
         HttpListener listener;
         string lastMessage = "";
-        Dictionary <Cookie, bool> clients;
+        Dictionary<Cookie, bool> clients;
+
+        Queue<string> receiveQueue = new Queue<string>();
+
+        public event Func<HttpListenerContext, Task> MessageReceived;
+        public event Action ServerStarted;
+        public event Action<Exception> ErrorRaised;
 
         public HttpServer(string uri)
         {
             clients = new Dictionary<Cookie, bool>();
             listener = new HttpListener();
             listener.Prefixes.Add(uri);
+            this.MessageReceived += OnMessage;
+            this.ServerStarted += OnStart;
+            this.ErrorRaised += OnError;
         }
 
-        public void Start()
+        private void OnError(Exception e)
         {
-            listener.Start();
-            Console.WriteLine("Listening...");
+            Console.WriteLine(e.Message);
+        }
 
+        private async void OnStart()
+        {
+            Console.WriteLine("Listening...");
             while (true)
             {
                 try
                 {
-                    HttpListenerContext context = listener.GetContext();
-                    Receiver(context);
+                    HttpListenerContext context = await listener.GetContextAsync();
+                    await MessageReceived(context);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-
+                    ErrorRaised(e);
                 }
             }
-
         }
 
-        private void Receiver(HttpListenerContext context)
+        private async Task OnMessage(HttpListenerContext context)
         {
             Dictionary<string, string> param = ParseRequest(context.Request);
             if (param.ContainsKey("message"))
             {
-                lastMessage = param["message"];
-                for(int i = 0; i< clients.Count; i++)
-                {
-                    clients[clients.Keys.ElementAt(i)] = true;
-                }
-                SendData(context, "received");
+                if (clients.Any(x => x.Value == true))
+                    receiveQueue.Enqueue(param["message"]);
+                else
+                    SetMessage(param["message"]);
+
+                await SendDataAsync(context, "received");
             }
             else if(param.ContainsKey("check"))
             {
@@ -61,32 +72,42 @@ namespace HttpChatServer
                 {
                     Cookie newCookie = new Cookie("ID", DateTime.Now.ToString());
                     context.Response.AppendCookie(newCookie);
-                    clients.Add(newCookie, false);
-                    SendData(context, "nomessage=true");                  
+                    if(!clients.ContainsKey(newCookie))
+                        clients.Add(newCookie, false);
+                    await SendDataAsync(context, "nomessage=true");
                 }
                 else
                 {
                     if (clients[cookie] == true)
                     {
-                        SendData(context, "message=" + lastMessage);
+                        await SendDataAsync(context, "message=" + lastMessage);
                         clients[cookie] = false;
+
+                        if (!clients.Any(x => x.Value == true) && receiveQueue.Count != 0)
+                            SetMessage(receiveQueue.Dequeue());
                     }
                     else
                     {
-                        SendData(context, "nomessage=true");
+                        await SendDataAsync(context, "nomessage=true");
                     }
                 }
             }
         }
 
-        private void SendData(HttpListenerContext context, string data)
+
+        public void Start()
+        {
+            listener.Start();
+            ServerStarted();
+            Console.ReadKey();
+        }
+
+        private async Task SendDataAsync(HttpListenerContext context, string data)
         {
             context.Response.ContentType = "text/plain";
-            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-            context.Response.AddHeader("Access-Control-Allow-Credentials", "true");
-            context.Response.AddHeader("Access-Control-Expose-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization"); 
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*"); 
             context.Response.ContentLength64 = data.Length;
-            context.Response.OutputStream.Write(Encoding.ASCII.GetBytes(data), 0, data.Length);
+            await context.Response.OutputStream.WriteAsync(Encoding.ASCII.GetBytes(data), 0, data.Length);
             context.Response.OutputStream.Close();
         }
 
@@ -113,6 +134,15 @@ namespace HttpChatServer
             }
 
             return param;
+        }
+
+        private void SetMessage(string message)
+        {
+            lastMessage = message;
+            for (int i = 0; i < clients.Count; i++)
+            {
+                clients[clients.Keys.ElementAt(i)] = true;
+            }          
         }
     }
 }
